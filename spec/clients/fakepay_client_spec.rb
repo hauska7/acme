@@ -20,7 +20,7 @@ RSpec.describe FakepayClient do
     context 'when request is correct' do
       it 'creates charge' do
         result = nil
-        VCR.use_cassette("fakepay_correct") do
+        VCR.use_cassette('fakepay_correct') do
           result = subject
         end
 
@@ -34,7 +34,7 @@ RSpec.describe FakepayClient do
 
       it 'response contains fakepay errors' do
         result = nil
-        VCR.use_cassette("fakepay_invalid") do
+        VCR.use_cassette('fakepay_invalid') do
           result = subject
         end
 
@@ -49,7 +49,7 @@ RSpec.describe FakepayClient do
 
       it 'response contains fakepay errors' do
         result = nil
-        VCR.use_cassette("fakepay_missing") do
+        VCR.use_cassette('fakepay_missing') do
           result = subject
         end
 
@@ -64,7 +64,7 @@ RSpec.describe FakepayClient do
 
       it 'response contains error' do
         result = nil
-        VCR.use_cassette("fakepay_unauthorized") do
+        VCR.use_cassette('fakepay_unauthorized') do
           result = subject
         end
 
