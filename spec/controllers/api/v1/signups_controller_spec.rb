@@ -5,18 +5,6 @@ require 'rails_helper'
 RSpec.describe Api::V1::SignupsController, type: :controller do
   describe '#create' do
     let(:fakepay_client) { instance_double(FakepayClient) }
-
-    before do
-      allow(FakepayClient).to receive(:new).and_return(fakepay_client)
-      allow(fakepay_client).to receive(:first_charge).with(
-        amount_cents: '6',
-        card_number: '4242424242424242',
-        cvv: '123',
-        expiration_month: '02',
-        expiration_year: Date.current.year + 2,
-        zip_code: '22222'
-      ).and_return(fakepay_result)
-    end
     let(:params) do
       { name: 'Johny Bravo',
         box_of_the_month_plan: 'bronze_box',
@@ -33,6 +21,18 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
           expiration_year: Date.current.year + 2,
           zip_code: '22222'
         } }
+    end
+
+    before do
+      allow(FakepayClient).to receive(:new).and_return(fakepay_client)
+      allow(fakepay_client).to receive(:first_charge).with(
+        amount_cents: '6',
+        card_number: '4242424242424242',
+        cvv: '123',
+        expiration_month: '02',
+        expiration_year: Date.current.year + 2,
+        zip_code: '22222'
+      ).and_return(fakepay_result)
     end
 
     context 'when request is valid' do
@@ -124,7 +124,7 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
         let(:fakepay_result) do
           { success: false,
             error_code: 'fakepay_validation_error',
-            fakepay_error_code: }
+            fakepay_error_code: fakepay_error_code }
         end
 
         context 'when fakepay error code is known' do
