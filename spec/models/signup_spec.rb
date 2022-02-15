@@ -8,7 +8,7 @@ RSpec.describe Signup do
       signup = described_class.new
       signup.name = 'Johny Bravo'
       signup.plan = 'bronze_box'
-      signup.token = '1234'
+      signup.fakepay_token = '1234'
 
       expect(signup.save).to be true
     end

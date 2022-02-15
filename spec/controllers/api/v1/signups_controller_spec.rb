@@ -17,26 +17,25 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
         zip_code: '22222'
       ).and_return(fakepay_result)
     end
+    let(:params) do
+      { name: 'Johny Bravo',
+        box_of_the_month_plan: 'bronze_box',
+        shipping_address: {
+          street: 'Sesame Street',
+          city: 'New York',
+          zip_code: '11111',
+          country: 'USA'
+        },
+        billing: {
+          card_number: '4242424242424242',
+          cvv: '123',
+          expiration_month: '02',
+          expiration_year: Date.current.year + 2,
+          zip_code: '22222'
+        } }
+    end
 
     context 'when request is valid' do
-      let(:params) do
-        { name: 'Johny Bravo',
-          box_of_the_month_plan: 'bronze_box',
-          shipping_address: {
-            street: 'Sesame Street',
-            city: 'New York',
-            zip_code: '11111',
-            country: 'USA'
-          },
-          billing: {
-            card_number: '4242424242424242',
-            cvv: '123',
-            expiration_month: '02',
-            expiration_year: Date.current.year + 2,
-            zip_code: '22222'
-          } }
-      end
-
       context 'when fakepay is successful' do
         let(:fakepay_result) do
           { success: true,
