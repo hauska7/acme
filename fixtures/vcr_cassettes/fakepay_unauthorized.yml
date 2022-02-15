@@ -1,0 +1,65 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://www.fakepay.io/purchase
+    body:
+      encoding: UTF-8
+      string: '{"amount":"1000","card_number":"4242424242424242","cvv":"123","expiration_month":"01","expiration_year":"2024","zip_code":"10045"}'
+    headers:
+      Content-Type:
+      - application/json
+      Authorization:
+      - Token token=invalid
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - www.fakepay.io
+  response:
+    status:
+      code: 401
+      message: Unauthorized
+    headers:
+      Server:
+      - Cowboy
+      Date:
+      - Tue, 15 Feb 2022 08:43:22 GMT
+      Connection:
+      - keep-alive
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Download-Options:
+      - noopen
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
+      Www-Authenticate:
+      - Token realm="Application"
+      Content-Type:
+      - text/plain; charset=utf-8
+      Cache-Control:
+      - no-cache
+      X-Request-Id:
+      - 0db845d6-74a1-4da9-a381-9514312c41cd
+      X-Runtime:
+      - '0.004281'
+      Transfer-Encoding:
+      - chunked
+      Via:
+      - 1.1 vegur
+    body:
+      encoding: UTF-8
+      string: 'HTTP Token: Access denied.
+
+'
+  recorded_at: Tue, 15 Feb 2022 08:43:23 GMT
+recorded_with: VCR 6.0.0

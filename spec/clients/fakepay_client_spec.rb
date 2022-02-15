@@ -19,7 +19,10 @@ RSpec.describe FakepayClient do
 
     context 'when request is correct' do
       it 'creates charge' do
-        result = subject
+        result = nil
+        VCR.use_cassette("fakepay_correct") do
+          result = subject
+        end
 
         expect(result[:success]).to be true
         expect(result[:token]).to be_present
@@ -30,7 +33,10 @@ RSpec.describe FakepayClient do
       let(:card_number) { '4242424242424241' }
 
       it 'response contains fakepay errors' do
-        result = subject
+        result = nil
+        VCR.use_cassette("fakepay_invalid") do
+          result = subject
+        end
 
         expect(result[:success]).to be false
         expect(result[:error_code]).to eq 'fakepay_validation_error'
@@ -42,7 +48,10 @@ RSpec.describe FakepayClient do
       let(:card_number) { nil }
 
       it 'response contains fakepay errors' do
-        result = subject
+        result = nil
+        VCR.use_cassette("fakepay_missing") do
+          result = subject
+        end
 
         expect(result[:success]).to be false
         expect(result[:error_code]).to eq 'fakepay_validation_error'
@@ -54,7 +63,10 @@ RSpec.describe FakepayClient do
       let(:api_key) { 'invalid' }
 
       it 'response contains error' do
-        result = subject
+        result = nil
+        VCR.use_cassette("fakepay_unauthorized") do
+          result = subject
+        end
 
         expect(result[:success]).to be false
         expect(result[:error_code]).to eq 'invalid_credentials'

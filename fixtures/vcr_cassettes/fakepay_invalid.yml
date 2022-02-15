@@ -1,0 +1,61 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://www.fakepay.io/purchase
+    body:
+      encoding: UTF-8
+      string: '{"amount":"1000","card_number":"4242424242424241","cvv":"123","expiration_month":"01","expiration_year":"2024","zip_code":"10045"}'
+    headers:
+      Content-Type:
+      - application/json
+      Authorization:
+      - Token token=7be53cca82315359d339ed54273dbe
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - www.fakepay.io
+  response:
+    status:
+      code: 422
+      message: Unprocessable Entity
+    headers:
+      Server:
+      - Cowboy
+      Date:
+      - Tue, 15 Feb 2022 08:43:21 GMT
+      Connection:
+      - keep-alive
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Download-Options:
+      - noopen
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
+      Content-Type:
+      - application/json; charset=utf-8
+      Cache-Control:
+      - no-cache
+      X-Request-Id:
+      - 0ba89eca-b8a6-4530-8ae0-d6e0aa028c69
+      X-Runtime:
+      - '0.010900'
+      Transfer-Encoding:
+      - chunked
+      Via:
+      - 1.1 vegur
+    body:
+      encoding: UTF-8
+      string: '{"token":null,"success":false,"error_code":1000001}'
+  recorded_at: Tue, 15 Feb 2022 08:43:22 GMT
+recorded_with: VCR 6.0.0
