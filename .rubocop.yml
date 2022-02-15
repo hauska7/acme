@@ -3,6 +3,8 @@ Metrics/BlockLength:
     - 'Rakefile'
     - '**/*.rake'
     - 'spec/**/*.rb'
+Metrics/MethodLength:
+  Max: 25
 AllCops:
   NewCops: enable
   SuggestExtensions: false

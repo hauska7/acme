@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe FakePayClient do
+RSpec.describe FakepayClient do
   describe '#first_charge' do
     subject { described_class.new(api_key).first_charge(payload) }
 
@@ -33,9 +33,20 @@ RSpec.describe FakePayClient do
         result = subject
 
         expect(result[:success]).to be false
-        expect(result[:error_code]).to eq 'fakepay_error'
+        expect(result[:error_code]).to eq 'fakepay_validation_error'
         expect(result[:fakepay_error_code]).to be_present
-        expect(result[:fakepay_error_message]).to be_present
+      end
+    end
+
+    context 'when card number is missing' do
+      let(:card_number) { nil }
+
+      it 'response contains fakepay errors' do
+        result = subject
+
+        expect(result[:success]).to be false
+        expect(result[:error_code]).to eq 'fakepay_validation_error'
+        expect(result[:fakepay_error_code]).to be_present
       end
     end
 
@@ -50,8 +61,21 @@ RSpec.describe FakePayClient do
       end
     end
 
+    context 'when fakepay returns 500' do
+      let(:server_failure_response) { double(code: '500') }
+
+      before { allow(Net::HTTP).to receive(:post).and_return(server_failure_response) }
+
+      it 'response contains error' do
+        result = subject
+
+        expect(result[:success]).to be false
+        expect(result[:error_code]).to eq 'fakepay_serious_error'
+      end
+    end
+
     context 'when there is a network issue' do
-      before { raise }
+      before { allow(Net::HTTP).to receive(:post).and_raise(Timeout::Error) }
 
       it 'response contains error' do
         result = subject
