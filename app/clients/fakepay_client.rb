@@ -12,8 +12,10 @@ class FakepayClient
     @api_key = api_key
   end
 
-  def first_charge(payload)
+  def first_charge(data)
     uri = URI('https://www.fakepay.io/purchase')
+    payload = data.except(:amount_cents)
+    payload[:amount] = data[:amount_cents]
     payload = payload.transform_values(&:to_s).to_json
     headers = { 'Content-Type' => 'application/json', 'Authorization' => "Token token=#{@api_key}" }
 

@@ -8,7 +8,7 @@ RSpec.describe FakepayClient do
 
     let(:api_key) { Rails.application.credentials.fakepay_api_key_test }
     let(:payload) do
-      { amount: '1000',
+      { amount_cents: '1000',
         card_number:,
         cvv: '123',
         expiration_month: '01',
