@@ -29,7 +29,7 @@ RSpec.describe PlanPriceService do
 
   context 'with invalid box plan' do
     it 'returns amount in cents' do
-      result = described_class.call('silver_box')
+      result = described_class.call('invalid')
 
       expect(result).to be_nil
     end
@@ -37,7 +37,7 @@ RSpec.describe PlanPriceService do
 
   context 'with nil box plan' do
     it 'returns amount in cents' do
-      result = described_class.call('silver_box')
+      result = described_class.call(nil)
 
       expect(result).to be_nil
     end
