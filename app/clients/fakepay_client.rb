@@ -12,6 +12,8 @@ class FakepayClient
     @api_key = api_key
   end
 
+  attr_reader :api_key
+
   def first_charge(data)
     uri = URI('https://www.fakepay.io/purchase')
     payload = data.except(:amount_cents)

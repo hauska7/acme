@@ -11,8 +11,7 @@ module CreateSignupService
       cvv: params['billing']['cvv'],
       expiration_month: params['billing']['expiration_month'],
       expiration_year: params['billing']['expiration_year'],
-      zip_code: params['billing']['zip_code'] }
-
+      zip_code: params['billing']['zip_code']
     }
     fakepay_result = FakepayClient.build.first_charge(fakepay_data)
 

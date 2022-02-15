@@ -3,6 +3,14 @@
 require 'rails_helper'
 
 RSpec.describe FakepayClient do
+  describe '.build' do
+    it 'builds fakepay client' do
+      result = described_class.build
+
+      expect(result.api_key).to be_present
+    end
+  end
+
   describe '#first_charge' do
     subject { described_class.new(api_key).first_charge(payload) }
 
