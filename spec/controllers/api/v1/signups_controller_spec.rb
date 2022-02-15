@@ -8,7 +8,7 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
 
     before do
       allow(FakepayClient).to receive(:new).and_return(fakepay_client)
-      allow(fakepay_client).to receive(first_charge).with(
+      allow(fakepay_client).to receive(:first_charge).with(
         amount_cents: '6',
         card_number: '4242424242424242',
         cvv: '123',
