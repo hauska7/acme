@@ -1,0 +1,8 @@
+Metrics/BlockLength:
+  Exclude:
+    - 'Rakefile'
+    - '**/*.rake'
+    - 'spec/**/*.rb'
+AllCops:
+  NewCops: enable
+  SuggestExtensions: false
