@@ -38,14 +38,14 @@ class FakepayClient
       body = JSON.parse response.body
 
       { success: false,
-        error_code: 'fakepay_validation_error',
+        error_code: 'validation_error',
         fakepay_error_code: body['error_code'] }
     when '401'
       { success: false,
         error_code: 'invalid_credentials' }
     else
       { success: false,
-        error_code: 'fakepay_serious_error' }
+        error_code: 'server_error' }
     end
   rescue *self.class.net_http_errors
     { success: false,

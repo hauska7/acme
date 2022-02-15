@@ -5,4 +5,6 @@ class Signup < ApplicationRecord
 
   validates :name, :plan, presence: true
   validates :plan, inclusion: { in: plans.keys }
+
+  belongs_to :shipping_address, class_name: 'Address'
 end

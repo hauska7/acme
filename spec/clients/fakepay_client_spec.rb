@@ -47,7 +47,7 @@ RSpec.describe FakepayClient do
         end
 
         expect(result[:success]).to be false
-        expect(result[:error_code]).to eq 'fakepay_validation_error'
+        expect(result[:error_code]).to eq 'validation_error'
         expect(result[:fakepay_error_code]).to be_present
       end
     end
@@ -62,7 +62,7 @@ RSpec.describe FakepayClient do
         end
 
         expect(result[:success]).to be false
-        expect(result[:error_code]).to eq 'fakepay_validation_error'
+        expect(result[:error_code]).to eq 'validation_error'
         expect(result[:fakepay_error_code]).to be_present
       end
     end
@@ -90,7 +90,7 @@ RSpec.describe FakepayClient do
         result = subject
 
         expect(result[:success]).to be false
-        expect(result[:error_code]).to eq 'fakepay_serious_error'
+        expect(result[:error_code]).to eq 'server_error'
       end
     end
 

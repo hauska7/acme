@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Signup do
+RSpec.describe Address do
   context 'with correct data' do
     it 'saves' do
       address = described_class.new
@@ -10,15 +10,8 @@ RSpec.describe Signup do
       address.city = 'New York'
       address.zip_code = '11111'
       address.country = 'USA'
-      address.save!
 
-      signup = described_class.new
-      signup.address = address
-      signup.name = 'Johny Bravo'
-      signup.plan = 'bronze_box'
-      signup.fakepay_token = '1234'
-
-      expect(signup.save).to be true
+      expect(address.save).to be true
     end
   end
 end

@@ -85,7 +85,7 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
       context 'when fakepay responds with server error' do
         let(:fakepay_result) do
           { success: false,
-            error_code: 'fakepay_serious_error' }
+            error_code: 'fakepay_server_error' }
         end
 
         it 'returns error information' do
