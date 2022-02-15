@@ -3,6 +3,11 @@
 # Api client for Fakepay
 
 class FakepayClient
+  def self.build
+    api_key = Rails.application.credentials.send("fakepay_api_key_#{Rails.env}")
+    new(api_key)
+  end
+
   def self.net_http_errors
     [Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError, Net::HTTPBadResponse,
      Net::HTTPHeaderSyntaxError, Net::ProtocolError]
