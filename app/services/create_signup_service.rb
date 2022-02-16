@@ -35,7 +35,16 @@ module CreateSignupService
 
       { status: 'success', signup: signup }
     else
-      { status: 'fakepay_failed', fakepay_result: fakepay_result }
+      case fakepay_result[:error_code]
+      when 'validation_error'
+        end_user_error = EndUserMessagesHelper.fakepay_error_with_notification(
+          fakepay_result[:fakepay_error_code]
+          )
+
+        { status: 'fakepay_failed', fakepay_result: fakepay_result, errors: [end_user_error] }
+      else
+        { status: 'fakepay_failed', fakepay_result: fakepay_result }
+      end
     end
   end
 end

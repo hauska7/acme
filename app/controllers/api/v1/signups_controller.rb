@@ -6,33 +6,20 @@ class Api::V1::SignupsController < ApplicationController
     when 'success'
       render status: 201, json: { signup_id: result[:signup].id }
     when 'validation_failed'
-      # this flow can be ignored as per assignment instructions
+      render status: 422, json: { error_code: 'validation_failed', errors: result[:errors] }
     when 'fakepay_failed'
       case result[:fakepay_result][:error_code]
       when 'validation_error'
-        end_user_error = EndUserMessagesHelper.fakepay_error_with_notification(
-          result[:fakepay_result][:fakepay_error_code]
-          )
-
         render status: 422, json: { error_code: 'fakepay_validation_error',
-                                    error_message: end_user_error[:message],
-                                    error_fields: end_user_error[:api_v1_fields] }.compact
-      when 'invalid_credentials'
+                                    errors: result[:errors] }
+      when *['invalid_credentials', 'server_error', 'network_issue']
+        NotifyDevelopersService.notify(issue: "fakepay_#{result[:fakepay_result][:error_code]}")
+
+        end_user_message = EndUserMessagesHelper.acme_error('server_error')
+
         render status: 503, json: { error_code: 'server_error',
-                                    error_message: end_user_message_acme('server_error') }
-      when 'server_error'
-        render status: 503, json: { error_code: 'server_error',
-                                    error_message: end_user_message_acme('server_error') }
-      when 'network_issue'
-        render status: 503, json: { error_code: 'server_error',
-                                    error_message: end_user_message_acme('server_error') }
+                                    errors: [{ message: end_user_message }] }
       end
     end
-  end
-
-  private
-
-  def end_user_message_acme(error_code)
-    EndUserMessagesHelper.acme_error(error_code)
   end
 end

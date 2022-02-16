@@ -66,60 +66,72 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
           end
         end
 
-        context 'when fakepay credentials are invalid' do
-          let(:fakepay_result) do
-            { success: false,
-              error_code: 'invalid_credentials' }
+        context 'when there is a serious issue with fakepay' do
+          before do
+            expect(NotifyDevelopersService)
+              .to receive(:notify)
+              .with(issue: "fakepay_#{fakepay_error_code}")
+              .once
           end
 
-          it 'returns error information' do
-            expect do
-              post :create, params:
-            end.not_to change { Signup.count }
+          context 'when fakepay credentials are invalid' do
+            let(:fakepay_result) do
+              { success: false,
+                error_code: fakepay_error_code }
+            end
+            let(:fakepay_error_code) { 'invalid_credentials' }
 
-            expect(response).to have_http_status(503)
-            parsed_response = JSON.parse response.body
-            expect(parsed_response['error_code']).to eq 'server_error'
-            expect(parsed_response['error_message']).to be_present
-            expect(parsed_response['error_fields']).to be_nil
-          end
-        end
+            it 'returns error information' do
+              expect do
+                post :create, params:
+              end.not_to change { Signup.count }
 
-        context 'when fakepay responds with server error' do
-          let(:fakepay_result) do
-            { success: false,
-              error_code: 'server_error' }
-          end
-
-          it 'returns error information' do
-            expect do
-              post :create, params: params
-            end.not_to change { Signup.count }
-
-            expect(response).to have_http_status(503)
-            parsed_response = JSON.parse response.body
-            expect(parsed_response['error_code']).to eq 'server_error'
-            expect(parsed_response['error_message']).to be_present
-            expect(parsed_response['error_fields']).to be_nil
-          end
-        end
-
-        context 'when fakepay network connection fails' do
-          let(:fakepay_result) do
-            { success: false,
-              error_code: 'network_issue' }
+              expect(response).to have_http_status(503)
+              parsed_response = JSON.parse response.body
+              expect(parsed_response['error_code']).to eq 'server_error'
+              expect(parsed_response['errors'].first['message']).to be_present
+              expect(parsed_response['errors'].first['fields']).to be_nil
+            end
           end
 
-          it 'returns error information' do
-            expect do
-              post :create, params: params
-            end.not_to change { Signup.count }
+          context 'when fakepay responds with server error' do
+            let(:fakepay_result) do
+              { success: false,
+                error_code: fakepay_error_code }
+            end
+            let(:fakepay_error_code) { 'server_error' }
 
-            expect(response).to have_http_status(503)
-            parsed_response = JSON.parse response.body
-            expect(parsed_response['error_code']).to eq 'server_error'
-            expect(parsed_response['error_message']).to be_present
-            expect(parsed_response['error_fields']).to be_nil
+            it 'returns error information' do
+              expect do
+                post :create, params: params
+              end.not_to change { Signup.count }
+
+              expect(response).to have_http_status(503)
+              parsed_response = JSON.parse response.body
+              expect(parsed_response['error_code']).to eq 'server_error'
+              expect(parsed_response['errors'].first['message']).to be_present
+              expect(parsed_response['errors'].first['fields']).to be_nil
+            end
+          end
+
+          context 'when fakepay network connection fails' do
+            let(:fakepay_result) do
+              { success: false,
+                error_code: fakepay_error_code }
+            end
+            let(:fakepay_error_code) { 'network_issue' }
+
+            it 'returns error information' do
+              expect do
+                post :create, params: params
+              end.not_to change { Signup.count }
+
+              expect(response).to have_http_status(503)
+              parsed_response = JSON.parse response.body
+              expect(parsed_response['error_code']).to eq 'server_error'
+              expect(parsed_response['errors'].first['message']).to be_present
+              expect(parsed_response['errors'].first['fields']).to be_nil
+            end
           end
         end
       end
@@ -143,8 +155,8 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
               expect(response).to have_http_status(422)
               parsed_response = JSON.parse response.body
               expect(parsed_response['error_code']).to eq 'fakepay_validation_error'
-              expect(parsed_response['error_message']).to eq 'Invalid credit card number'
-              expect(parsed_response['error_fields']).to eq ['billing/card_number']
+              expect(parsed_response['errors'].first['message']).to eq 'Invalid credit card number'
+              expect(parsed_response['errors'].first['fields']).to eq ['billing/card_number']
             end
           end
 
@@ -164,8 +176,8 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
               expect(response).to have_http_status(422)
               parsed_response = JSON.parse response.body
               expect(parsed_response['error_code']).to eq 'fakepay_validation_error'
-              expect(parsed_response['error_message']).to eq 'Problem with payment.'
-              expect(parsed_response['error_fields']).to be_nil
+              expect(parsed_response['errors'].first['message']).to eq 'Problem with payment.'
+              expect(parsed_response['errors'].first['fields']).to be_nil
             end
           end
         end
@@ -183,8 +195,8 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
         expect(response).to have_http_status(422)
         parsed_response = JSON.parse response.body
         expect(parsed_response['error_code']).to eq 'validation_failed'
-        expect(parsed_response['error_message']).to eq 'Shipping zip code is invalid.'
-        expect(parsed_response['error_fields']).to eq ['shipping/zip_code']
+        expect(parsed_response['errors'].first['message']).to eq 'Invalid shipping address zip code'
+        expect(parsed_response['errors'].first['fields']).to eq ['shipping_address/zip_code']
       end
     end
   end

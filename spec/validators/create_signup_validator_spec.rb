@@ -36,7 +36,7 @@ RSpec.describe CreateSignupValidator do
       result = described_class.call(params)
 
       expect(result.first[:message]).to be_present
-      expect(result.first[:api_v1_fields]).to be_present
+      expect(result.first[:fields]).to be_present
     end
   end
 end

@@ -9,7 +9,7 @@ RSpec.describe EndUserMessagesHelper do
         result = described_class.fakepay_error('1000001')
 
         expect(result[:message]).to eq 'Invalid credit card number'
-        expect(result[:api_v1_fields]).to eq ['billing/card_number']
+        expect(result[:fields]).to eq ['billing/card_number']
       end
     end
 
@@ -18,7 +18,7 @@ RSpec.describe EndUserMessagesHelper do
         result = described_class.fakepay_error('unknown')
 
         expect(result[:message]).to eq 'Problem with payment.'
-        expect(result[:api_v1_fields]).to be_nil
+        expect(result[:fields]).to be_nil
       end
     end
   end
@@ -31,7 +31,7 @@ RSpec.describe EndUserMessagesHelper do
         result = described_class.fakepay_error_with_notification('1000001')
 
         expect(result[:message]).to eq 'Invalid credit card number'
-        expect(result[:api_v1_fields]).to eq ['billing/card_number']
+        expect(result[:fields]).to eq ['billing/card_number']
       end
     end
 
@@ -45,7 +45,7 @@ RSpec.describe EndUserMessagesHelper do
         result = described_class.fakepay_error_with_notification('unknown')
 
         expect(result[:message]).to eq 'Problem with payment.'
-        expect(result[:api_v1_fields]).to be_nil
+        expect(result[:fields]).to be_nil
       end
     end
   end
