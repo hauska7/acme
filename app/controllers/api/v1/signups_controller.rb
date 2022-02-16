@@ -16,7 +16,7 @@ class Api::V1::SignupsController < ApplicationController
 
         render status: 422, json: { error_code: 'fakepay_validation_error',
                                     error_message: end_user_error[:message],
-                                    error_fields: end_user_error[:fields] }
+                                    error_fields: end_user_error[:api_v1_fields] }.compact
       when 'invalid_credentials'
         render status: 503, json: { error_code: 'server_error',
                                     error_message: end_user_error_message_acme('server_error') }

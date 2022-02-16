@@ -8,8 +8,8 @@ RSpec.describe EndUserMessagesHelper do
       it 'returns error message and fields' do
         result = described_class.fakepay_error('1000001')
 
-        expect(result[:message]).to eq 'hello'
-        expect(result[:fields]).to eq ['hello']
+        expect(result[:message]).to eq 'Invalid credit card number'
+        expect(result[:api_v1_fields]).to eq ['billing/card_number']
       end
     end
 
@@ -17,8 +17,8 @@ RSpec.describe EndUserMessagesHelper do
       it 'returns error message' do
         result = described_class.fakepay_error('unknown')
 
-        expect(result[:message]).to eq 'hello'
-        expect(result[:fields]).to be_nil
+        expect(result[:message]).to eq 'Problem with payment.'
+        expect(result[:api_v1_fields]).to be_nil
       end
     end
   end
@@ -26,26 +26,26 @@ RSpec.describe EndUserMessagesHelper do
   describe '.fakepay_error_with_notification' do
     context 'known error' do
       it 'doesnt notify developers' do
-        expect(NotifyDevelopers).not_to receive(:notify)
+        expect(NotifyDevelopersService).not_to receive(:notify)
 
         result = described_class.fakepay_error_with_notification('1000001')
 
-        expect(result[:message]).to eq 'hello'
-        expect(result[:fields]).to eq ['hello']
+        expect(result[:message]).to eq 'Invalid credit card number'
+        expect(result[:api_v1_fields]).to eq ['billing/card_number']
       end
     end
 
     context 'unknown error' do
       it 'notifies developers' do
-        allow(NotifyDevelopers)
+        allow(NotifyDevelopersService)
           .to receive(:notify)
           .with(issue: 'unknown_fakepay_error_code', fakepay_error_code: 'unknown')
-        expect(NotifyDevelopers).to receive(:notify).once
+        expect(NotifyDevelopersService).to receive(:notify).once
 
         result = described_class.fakepay_error_with_notification('unknown')
 
-        expect(result[:message]).to eq 'hello'
-        expect(result[:fields]).to be_nil
+        expect(result[:message]).to eq 'Problem with payment.'
+        expect(result[:api_v1_fields]).to be_nil
       end
     end
   end
@@ -55,7 +55,7 @@ RSpec.describe EndUserMessagesHelper do
       it 'returns error message' do
         result = described_class.acme_error('server_error')
 
-        expect(result[:message]).to eq 'hello'
+        expect(result[:message]).to eq 'There is a problem. Try again later.'
       end
     end
 
@@ -63,7 +63,7 @@ RSpec.describe EndUserMessagesHelper do
       it 'returns error message' do
         result = described_class.acme_error('unknown')
 
-        expect(result[:message]).to eq 'hello'
+        expect(result[:message]).to eq 'There is a problem. Try again later.'
       end
     end
   end
