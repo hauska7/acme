@@ -47,7 +47,7 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
             expect(fakepay_client).to receive(:first_charge).once
 
             expect do
-              post :create, params: params
+              post :create, params:
             end.to change { Signup.count }.by 1
 
             signup = Signup.last
@@ -84,7 +84,7 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
             it 'returns error information' do
               expect do
                 post :create, params:
-              end.not_to change { Signup.count }
+              end.not_to(change { Signup.count })
 
               expect(response).to have_http_status(503)
               parsed_response = JSON.parse response.body
@@ -103,8 +103,8 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
 
             it 'returns error information' do
               expect do
-                post :create, params: params
-              end.not_to change { Signup.count }
+                post :create, params:
+              end.not_to(change { Signup.count })
 
               expect(response).to have_http_status(503)
               parsed_response = JSON.parse response.body
@@ -123,8 +123,8 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
 
             it 'returns error information' do
               expect do
-                post :create, params: params
-              end.not_to change { Signup.count }
+                post :create, params:
+              end.not_to(change { Signup.count })
 
               expect(response).to have_http_status(503)
               parsed_response = JSON.parse response.body
@@ -141,7 +141,7 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
           let(:fakepay_result) do
             { success: false,
               error_code: 'validation_error',
-              fakepay_error_code: fakepay_error_code }
+              fakepay_error_code: }
           end
 
           context 'when fakepay error code is known' do
@@ -149,8 +149,8 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
 
             it 'returns error information' do
               expect do
-                post :create, params: params
-              end.not_to change { Signup.count }
+                post :create, params:
+              end.not_to(change { Signup.count })
 
               expect(response).to have_http_status(422)
               parsed_response = JSON.parse response.body
@@ -166,12 +166,12 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
             it 'returns error information' do
               expect(NotifyDevelopersService)
                 .to receive(:notify)
-                .with(fakepay_error_code: "1111", issue: "unknown_fakepay_error_code")
+                .with(fakepay_error_code: '1111', issue: 'unknown_fakepay_error_code')
                 .once
 
               expect do
-                post :create, params: params
-              end.not_to change { Signup.count }
+                post :create, params:
+              end.not_to(change { Signup.count })
 
               expect(response).to have_http_status(422)
               parsed_response = JSON.parse response.body
@@ -189,8 +189,8 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
 
       it 'returns error information' do
         expect do
-          post :create, params: params
-        end.not_to change { Signup.count }
+          post :create, params:
+        end.not_to(change { Signup.count })
 
         expect(response).to have_http_status(422)
         parsed_response = JSON.parse response.body

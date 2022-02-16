@@ -1,24 +1,31 @@
-class Api::V1::SignupsController < ApplicationController
-  def create
-    result = CreateSignupService.call(params)
+# frozen_string_literal: true
 
-    case result[:status]
-    when 'success'
-      render status: 201, json: { signup_id: result[:signup].id }
-    when 'validation_failed'
-      render status: 422, json: { error_code: 'validation_failed', errors: result[:errors] }
-    when 'fakepay_failed'
-      case result[:fakepay_result][:error_code]
-      when 'validation_error'
-        render status: 422, json: { error_code: 'fakepay_validation_error',
-                                    errors: result[:errors] }
-      when *['invalid_credentials', 'server_error', 'network_issue']
-        NotifyDevelopersService.notify(issue: "fakepay_#{result[:fakepay_result][:error_code]}")
+module Api
+  module V1
+    # Signups Controller
+    class SignupsController < ApplicationController
+      def create
+        result = CreateSignupService.call(params)
 
-        end_user_message = EndUserMessagesHelper.acme_error('server_error')
+        case result[:status]
+        when 'success'
+          render status: 201, json: { signup_id: result[:signup].id }
+        when 'validation_failed'
+          render status: 422, json: { error_code: 'validation_failed', errors: result[:errors] }
+        when 'fakepay_failed'
+          case result[:fakepay_result][:error_code]
+          when 'validation_error'
+            render status: 422, json: { error_code: 'fakepay_validation_error',
+                                        errors: result[:errors] }
+          when 'invalid_credentials', 'server_error', 'network_issue'
+            NotifyDevelopersService.notify(issue: "fakepay_#{result[:fakepay_result][:error_code]}")
 
-        render status: 503, json: { error_code: 'server_error',
-                                    errors: [{ message: end_user_message }] }
+            end_user_message = EndUserMessagesHelper.acme_error('server_error')
+
+            render status: 503, json: { error_code: 'server_error',
+                                        errors: [{ message: end_user_message }] }
+          end
+        end
       end
     end
   end

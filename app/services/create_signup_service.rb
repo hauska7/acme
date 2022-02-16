@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
+# Main service responsible for creating signups
 module CreateSignupService
   def self.call(params)
     errors = CreateSignupValidator.call(params)
-    return { status: 'validation_failed', errors: errors } if errors.present?
+    return { status: 'validation_failed', errors: } if errors.present?
 
     plan_price_cents = PlanPriceService.call(params['plan'])
 
@@ -33,17 +36,17 @@ module CreateSignupService
         signup.save!
       end
 
-      { status: 'success', signup: signup }
+      { status: 'success', signup: }
     else
       case fakepay_result[:error_code]
       when 'validation_error'
         end_user_error = EndUserMessagesHelper.fakepay_error_with_notification(
           fakepay_result[:fakepay_error_code]
-          )
+        )
 
-        { status: 'fakepay_failed', fakepay_result: fakepay_result, errors: [end_user_error] }
+        { status: 'fakepay_failed', fakepay_result:, errors: [end_user_error] }
       else
-        { status: 'fakepay_failed', fakepay_result: fakepay_result }
+        { status: 'fakepay_failed', fakepay_result: }
       end
     end
   end

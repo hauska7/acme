@@ -1,4 +1,9 @@
+# frozen_string_literal: true
+
+# Signup validator
 module CreateSignupValidator
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
   def self.call(params)
     # only validating presence as per assignment assumptions
 
@@ -72,4 +77,6 @@ module CreateSignupValidator
 
     result
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 end

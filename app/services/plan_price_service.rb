@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
+# Map plan to price
 module PlanPriceService
+  MAPPING = {
+    bronze_box: 1999,
+    silver_box: 4900,
+    gold_box: 9900
+  }.freeze
+
   def self.call(plan)
-    case plan
-    when 'bronze_box'
-      1999
-    when 'silver_box'
-      4900
-    when 'gold_box'
-      9900
-    end
+    MAPPING[plan&.to_sym]
   end
 end
