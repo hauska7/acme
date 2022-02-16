@@ -16,12 +16,13 @@ module CreateSignupService
     fakepay_result = FakepayClient.build.first_charge(fakepay_data)
 
     if fakepay_result[:success]
+      signup = nil
       ActiveRecord::Base.transaction do
         address = Address.new
-        address.street = params['shipping']['street']
-        address.city = params['shipping']['city']
-        address.zip_code = params['shipping']['zip_code']
-        address.country = params['shipping']['country']
+        address.street = params['shipping_address']['street']
+        address.city = params['shipping_address']['city']
+        address.zip_code = params['shipping_address']['zip_code']
+        address.country = params['shipping_address']['country']
         address.save!
 
         signup = Signup.new
@@ -32,9 +33,9 @@ module CreateSignupService
         signup.save!
       end
 
-      { status: 'success' }
+      { status: 'success', signup: signup }
     else
-      { status 'fakepay_failed', fakepay_result: fakepay_result }
+      { status: 'fakepay_failed', fakepay_result: fakepay_result }
     end
   end
 end

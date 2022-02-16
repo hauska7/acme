@@ -7,7 +7,7 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
     let(:fakepay_client) { instance_double(FakepayClient) }
     let(:params) do
       { name: 'Johny Bravo',
-        box_of_the_month_plan: 'bronze_box',
+        plan: 'bronze_box',
         shipping_address: {
           street: 'Sesame Street',
           city: 'New York',
@@ -26,11 +26,11 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
     before do
       allow(FakepayClient).to receive(:new).and_return(fakepay_client)
       allow(fakepay_client).to receive(:first_charge).with(
-        amount_cents: '6',
+        amount_cents: 1999,
         card_number: '4242424242424242',
         cvv: '123',
         expiration_month: '02',
-        expiration_year: Date.current.year + 2,
+        expiration_year: (Date.current.year + 2).to_s,
         zip_code: '22222'
       ).and_return(fakepay_result)
     end
@@ -43,23 +43,24 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
         end
 
         it 'creates a signup' do
-          expect do
-            post :create, params:
-          end.to change { Signup.count }.by 1
+          expect(fakepay_client).to receive(:first_charge).once
 
-          expect(fakepay_client).to have_recived(:first_charge).once
+          expect do
+            post :create, params: params
+          end.to change { Signup.count }.by 1
 
           signup = Signup.last
           expect(signup.name).to eq 'Johny Bravo'
           expect(signup.plan).to eq 'bronze_box'
           expect(signup.fakepay_token).to eq '9674'
-          address = signup.address
+          address = signup.shipping_address
           expect(address.street).to eq 'Sesame Street'
           expect(address.city).to eq 'New York'
           expect(address.zip_code).to eq '11111'
           expect(address.country).to eq 'USA'
 
-          expect(response).to have_http_status(200)
+          expect(response).to have_http_status(201)
+          parsed_response = JSON.parse response.body
           expect(parsed_response['signup_id']).to eq signup.id
         end
       end
@@ -76,27 +77,29 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
           end.not_to change { Signup.count }
 
           expect(response).to have_http_status(503)
+          parsed_response = JSON.parse response.body
           expect(parsed_response['error_code']).to eq 'server_error'
-          expect(parsed_response['error_message']).to be_empty
-          expect(parsed_response['error_fields']).to be_empty
+          expect(parsed_response['error_message']).to be_present
+          expect(parsed_response['error_fields']).to be_nil
         end
       end
 
       context 'when fakepay responds with server error' do
         let(:fakepay_result) do
           { success: false,
-            error_code: 'fakepay_server_error' }
+            error_code: 'server_error' }
         end
 
         it 'returns error information' do
           expect do
-            post :create, params:
+            post :create, params: params
           end.not_to change { Signup.count }
 
           expect(response).to have_http_status(503)
+          parsed_response = JSON.parse response.body
           expect(parsed_response['error_code']).to eq 'server_error'
-          expect(parsed_response['error_message']).to be_empty
-          expect(parsed_response['error_fields']).to be_empty
+          expect(parsed_response['error_message']).to be_present
+          expect(parsed_response['error_fields']).to be_nil
         end
       end
 
@@ -108,13 +111,14 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
 
         it 'returns error information' do
           expect do
-            post :create, params:
+            post :create, params: params
           end.not_to change { Signup.count }
 
           expect(response).to have_http_status(503)
+          parsed_response = JSON.parse response.body
           expect(parsed_response['error_code']).to eq 'server_error'
-          expect(parsed_response['error_message']).to be_empty
-          expect(parsed_response['error_fields']).to be_empty
+          expect(parsed_response['error_message']).to be_present
+          expect(parsed_response['error_fields']).to be_nil
         end
       end
     end
@@ -123,7 +127,7 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
       context 'when fakepay validation fails' do
         let(:fakepay_result) do
           { success: false,
-            error_code: 'fakepay_validation_error',
+            error_code: 'validation_error',
             fakepay_error_code: fakepay_error_code }
         end
 
@@ -132,10 +136,11 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
 
           it 'returns error information' do
             expect do
-              post :create, params:
+              post :create, params: params
             end.not_to change { Signup.count }
 
             expect(response).to have_http_status(422)
+            parsed_response = JSON.parse response.body
             expect(parsed_response['error_code']).to eq 'fakepay_validation_error'
             expect(parsed_response['error_message']).to eq 'Card number problem'
             expect(parsed_response['error_fields']).to eq ['card_number']
@@ -147,13 +152,14 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
 
           it 'returns error information' do
             expect do
-              post :create, params:
+              post :create, params: params
             end.not_to change { Signup.count }
 
             expect(response).to have_http_status(422)
+            parsed_response = JSON.parse response.body
             expect(parsed_response['error_code']).to eq 'fakepay_validation_error'
             expect(parsed_response['error_message']).to eq 'There was a problem with payment.'
-            expect(parsed_response['error_fields']).to be_empty
+            expect(parsed_response['error_fields']).to be_nil
 
             expect('developers notified').to eq 'ok'
           end
