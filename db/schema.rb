@@ -17,17 +17,17 @@ ActiveRecord::Schema[7.0].define(version: 20_220_215_221_643) do
   enable_extension 'plpgsql'
 
   create_table 'addresses', force: :cascade do |t|
-    t.string 'street'
-    t.string 'city'
-    t.string 'zip_code'
-    t.string 'country'
+    t.string 'street', null: false
+    t.string 'city', null: false
+    t.string 'zip_code', null: false
+    t.string 'country', null: false
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
   end
 
   create_table 'signups', force: :cascade do |t|
-    t.string 'name'
-    t.string 'plan'
+    t.string 'name', null: false
+    t.string 'plan', null: false
     t.string 'fakepay_token'
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
