@@ -35,7 +35,7 @@ module CreateSignupService
         signup.fakepay_token = fakepay_result[:token]
         signup.save!
 
-        signup.set_next_charge_date
+        SetNextChargeDateService.call signup
         signup.save!
       end
 

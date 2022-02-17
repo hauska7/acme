@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Signup do
   context 'with correct data' do
     it 'saves' do
-      address = create!(:address)
+      address = create(:address)
 
       signup = described_class.new
       signup.shipping_address = address
