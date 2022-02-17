@@ -5,7 +5,3 @@ postgres:
   environment:
     - POSTGRES_USER=docker
     - POSTGRES_PASSWORD=docker
-redis:
-  image: redis
-  ports:
-    - 63790:6379
