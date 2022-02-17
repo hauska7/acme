@@ -2,6 +2,7 @@
 
 # Set next charge date
 module SetNextChargeDateService
+  # When date cant be set
   class CantError < StandardError
     attr_reader :signup
 
@@ -14,6 +15,7 @@ module SetNextChargeDateService
   def self.call!(signup)
     result = call(signup)
     raise CantError.new('Cant set next charge date', signup) unless result[:success]
+
     result
   end
 

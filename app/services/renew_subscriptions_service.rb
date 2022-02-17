@@ -2,8 +2,9 @@
 
 # Renew subscriptions
 # This approach uses SELECT FOR UPDATE SKIP LOCKED so that if multiple processes are run in parallel
-# they dont block each other on database call. A SELECT FOR UPDATE is later used to make sure no subscriptions are skipped.
-# A downside to this approach is that a subscription is being lock for update for the duration of api call.
+# they dont block each other on database call. A SELECT FOR UPDATE is later used to make sure that
+# no subscriptions are skipped. A downside to this approach is that a subscription is being lock for update
+# for the duration of api call.
 class RenewSubscriptionsService
   class RepeatError < StandardError; end
 
@@ -53,19 +54,17 @@ class RenewSubscriptionsService
 
   def find_subscription
     result = Signup
-      .where('next_charge_date < ?', @until_date)
-      .where.not(fakepay_token: nil)
-      .lock('FOR UPDATE SKIP LOCKED')
-      .first
+             .where('next_charge_date < ?', @until_date)
+             .where.not(fakepay_token: nil)
+             .lock('FOR UPDATE SKIP LOCKED')
+             .first
 
     return result if result
 
-    result = Signup
+    Signup
       .where('next_charge_date < ?', @until_date)
       .where.not(fakepay_token: nil)
       .lock('FOR UPDATE')
       .first
-
-    result
   end
 end

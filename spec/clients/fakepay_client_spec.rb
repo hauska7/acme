@@ -112,7 +112,7 @@ RSpec.describe FakepayClient do
 
     let(:payload) do
       { amount_cents: '1000',
-        token: token }
+        token: }
     end
 
     context 'when request is correct' do

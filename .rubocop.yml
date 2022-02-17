@@ -1,10 +1,11 @@
 Metrics/BlockLength:
+  Max: 30
   Exclude:
     - 'Rakefile'
     - '**/*.rake'
     - 'spec/**/*.rb'
 Metrics/MethodLength:
-  Max: 40
+  Max: 45
 Metrics/PerceivedComplexity:
   Max: 12
 Metrics/CyclomaticComplexity:

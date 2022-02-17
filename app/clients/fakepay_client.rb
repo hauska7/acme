@@ -64,8 +64,6 @@ class FakepayClient
       { success: true,
         token: body['token'] }
     when '422'
-      body = JSON.parse response.body
-
       { success: false,
         error_code: 'invalid_token' }
     when '401'
