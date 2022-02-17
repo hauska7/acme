@@ -112,56 +112,74 @@ RSpec.describe FakepayClient do
 
     let(:payload) do
       { amount_cents: '1000',
-        token: '9786' }
+        token: token }
     end
 
     context 'when request is correct' do
-      it 'creates charge' do
+      let(:token) { '141127d207221d5dcd3c9df5dea6d3' }
+
+      context 'when response is valid' do
+        it 'creates charge' do
+          result = nil
+          VCR.use_cassette('fakepay_subsequent_correct') do
+            result = subject
+          end
+
+          expect(result[:success]).to be true
+          expect(result[:token]).to be_present
+        end
+      end
+
+      context 'when credentials are invalid' do
+        let(:api_key) { 'invalid' }
+
+        it 'response contains error' do
+          result = nil
+          VCR.use_cassette('fakepay_subsequent_unauthorized') do
+            result = subject
+          end
+
+          expect(result[:success]).to be false
+          expect(result[:error_code]).to eq 'invalid_credentials'
+        end
+      end
+
+      context 'when fakepay returns 500' do
+        let(:server_failure_response) { double(code: '500') }
+
+        before { allow(Net::HTTP).to receive(:post).and_return(server_failure_response) }
+
+        it 'response contains error' do
+          result = subject
+
+          expect(result[:success]).to be false
+          expect(result[:error_code]).to eq 'server_error'
+        end
+      end
+
+      context 'when there is a network issue' do
+        before { allow(Net::HTTP).to receive(:post).and_raise(Timeout::Error) }
+
+        it 'response contains error' do
+          result = subject
+
+          expect(result[:success]).to be false
+          expect(result[:error_code]).to eq 'network_issue'
+        end
+      end
+    end
+
+    context 'when token is invalid' do
+      let(:token) { 'invalid' }
+
+      it 'returns invalid_token error' do
         result = nil
-        VCR.use_cassette('fakepay_subsequent_correct') do
+        VCR.use_cassette('fakepay_subsequent_invalid_token') do
           result = subject
         end
 
-        expect(result[:success]).to be true
-        expect(result[:token]).to be_present
-      end
-    end
-
-    context 'when credentials are invalid' do
-      let(:api_key) { 'invalid' }
-
-      it 'response contains error' do
-        result = nil
-        VCR.use_cassette('fakepay_subsequent_unauthorized') do
-          result = subject
-        end
-
         expect(result[:success]).to be false
-        expect(result[:error_code]).to eq 'invalid_credentials'
-      end
-    end
-
-    context 'when fakepay returns 500' do
-      let(:server_failure_response) { double(code: '500') }
-
-      before { allow(Net::HTTP).to receive(:post).and_return(server_failure_response) }
-
-      it 'response contains error' do
-        result = subject
-
-        expect(result[:success]).to be false
-        expect(result[:error_code]).to eq 'server_error'
-      end
-    end
-
-    context 'when there is a network issue' do
-      before { allow(Net::HTTP).to receive(:post).and_raise(Timeout::Error) }
-
-      it 'response contains error' do
-        result = subject
-
-        expect(result[:success]).to be false
-        expect(result[:error_code]).to eq 'network_issue'
+        expect(result[:error_code]).to eq 'invalid_token'
       end
     end
   end

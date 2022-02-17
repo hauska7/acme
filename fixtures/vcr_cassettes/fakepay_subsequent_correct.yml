@@ -1,0 +1,63 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://www.fakepay.io/purchase
+    body:
+      encoding: UTF-8
+      string: '{"token":"141127d207221d5dcd3c9df5dea6d3","amount":"1000"}'
+    headers:
+      Content-Type:
+      - application/json
+      Authorization:
+      - Token token=7be53cca82315359d339ed54273dbe
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - www.fakepay.io
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Cowboy
+      Date:
+      - Thu, 17 Feb 2022 13:56:43 GMT
+      Connection:
+      - keep-alive
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Download-Options:
+      - noopen
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
+      Content-Type:
+      - application/json; charset=utf-8
+      Etag:
+      - W/"958b2fb79b8d4b74d9599072bf9f2d76"
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - 98eebf7a-1687-4960-bf64-0291f4d1b25c
+      X-Runtime:
+      - '0.065348'
+      Transfer-Encoding:
+      - chunked
+      Via:
+      - 1.1 vegur
+    body:
+      encoding: UTF-8
+      string: '{"token":"141127d207221d5dcd3c9df5dea6d3","success":true,"error_code":null}'
+  recorded_at: Thu, 17 Feb 2022 13:56:44 GMT
+recorded_with: VCR 6.0.0

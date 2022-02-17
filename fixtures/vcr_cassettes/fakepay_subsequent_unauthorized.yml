@@ -1,0 +1,65 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://www.fakepay.io/purchase
+    body:
+      encoding: UTF-8
+      string: '{"token":"141127d207221d5dcd3c9df5dea6d3","amount":"1000"}'
+    headers:
+      Content-Type:
+      - application/json
+      Authorization:
+      - Token token=invalid
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - www.fakepay.io
+  response:
+    status:
+      code: 401
+      message: Unauthorized
+    headers:
+      Server:
+      - Cowboy
+      Date:
+      - Thu, 17 Feb 2022 13:56:44 GMT
+      Connection:
+      - keep-alive
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Download-Options:
+      - noopen
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
+      Www-Authenticate:
+      - Token realm="Application"
+      Content-Type:
+      - text/plain; charset=utf-8
+      Cache-Control:
+      - no-cache
+      X-Request-Id:
+      - e6d7df43-826b-4fbf-bc70-ef16585ac28b
+      X-Runtime:
+      - '0.004436'
+      Transfer-Encoding:
+      - chunked
+      Via:
+      - 1.1 vegur
+    body:
+      encoding: UTF-8
+      string: 'HTTP Token: Access denied.
+
+'
+  recorded_at: Thu, 17 Feb 2022 13:56:45 GMT
+recorded_with: VCR 6.0.0
