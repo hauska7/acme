@@ -10,11 +10,11 @@ class Signup < ApplicationRecord
 
   def set_next_charge_date
     if next_charge_date.nil?
-      next_charge_date = TimeHelper.same_day_next_month(created_at)
-    elsif next_charge_date > Date.today
-      # do nothing
-    else
-      next_charge_date = TimeHelper.same_day_next_month(next_charge_date)
+      return unless created_at
+
+      next_charge_date = 1.month.since created_at.to_date
+    elsif next_charge_date < Date.tomorrow
+      next_charge_date = 1.month.since next_charge_date
     end
   end
 end
