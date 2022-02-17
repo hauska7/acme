@@ -1,24 +1,38 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Assignment
 
-Things you may want to cover:
+https://www.fakepay.io/challenge
 
-* Ruby version
+This solution contains the regular assignment and one bonus task of a worker for subsequent subscription charges
 
-* System dependencies
+## Setup project
 
-* Configuration
+add master key:
+- create file /config/master.key
+- add file content: 9ea80b176970ef5004413cf81ab678db
+- note: master key should not be commited to repository normally
 
-* Database creation
+docker-compose create
 
-* Database initialization
+docker-compose start
 
-* How to run the test suite
+bundle install
 
-* Services (job queues, cache servers, search engines, etc.)
+rake db:create && rake db:migrate
 
-* Deployment instructions
+rails s
 
-* ...
+## Run tests
+
+rspec
+
+## Run bonus renew subscriptions worker
+
+rake renew_subscriptions
+
+## Thoughts on this project
+
+Currently we use the same fakepay api key for testing and "production" there would need to be a separate one for testing.
+
+There is a vcr error when running rspec it is probably related to ruby/rails version. Please inspect the patch here: config/initializers/001_vcr_patch.rb
