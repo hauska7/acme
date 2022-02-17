@@ -27,7 +27,7 @@ rspec
 
 # Run bonus renew subscriptions worker
 
-rake renew_subscriptions TODO
+rake renew_subscriptions
 
 # Thoughts on this project
 
