@@ -50,4 +50,7 @@ class FakepayClient
     { success: false,
       error_code: 'network_issue' }
   end
+
+  def subsequent_charge(data)
+  end
 end
