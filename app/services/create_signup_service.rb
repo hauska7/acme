@@ -34,6 +34,9 @@ module CreateSignupService
         signup.plan = params['plan']
         signup.fakepay_token = fakepay_result[:token]
         signup.save!
+
+        signup.set_next_charge_date
+        signup.save!
       end
 
       { status: 'success', signup: }

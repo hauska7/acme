@@ -54,6 +54,7 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
             expect(signup.name).to eq 'Johny Bravo'
             expect(signup.plan).to eq 'bronze_box'
             expect(signup.fakepay_token).to eq '9674'
+            expect(signup.next_charge_date).to be_present
             address = signup.shipping_address
             expect(address.street).to eq 'Sesame Street'
             expect(address.city).to eq 'New York'
