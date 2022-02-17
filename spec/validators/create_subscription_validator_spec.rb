@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe CreateSignupValidator do
+RSpec.describe CreateSubscriptionValidator do
   let(:params) do
     { name: 'Johny Bravo',
       plan: 'bronze_box',

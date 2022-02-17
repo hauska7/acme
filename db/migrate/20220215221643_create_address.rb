@@ -12,6 +12,6 @@ class CreateAddress < ActiveRecord::Migration[7.0]
       t.timestamps
     end
 
-    add_reference(:signups, :shipping_address, index: true, foreign_key: { to_table: :addresses }, null: false)
+    add_reference(:subscriptions, :shipping_address, index: true, foreign_key: { to_table: :addresses }, null: false)
   end
 end

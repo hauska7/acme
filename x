@@ -33,8 +33,6 @@ rake renew_subscriptions
 
 Currently we use the same fakepay api key for testing and "production" there would need to be a separate one for testing.
 
-There is still a few rubocop errors that should be fixed. They are leftover from generating project.
-
 There is a vcr error when running rspec it is probably related to ruby/rails version. Please inspect the patch here: config/initializers/001_vcr_patch.rb
 
 Signup model should probably be renamed to Subscription

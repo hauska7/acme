@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :signup do
+  factory :subscription do
     name { 'Johny Bravo' }
     plan { 'bronze_box' }
     fakepay_token { '7539' }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Signup < ApplicationRecord
+class Subscription < ApplicationRecord
   encrypts :fakepay_token
 
   validates :name, :plan, presence: true

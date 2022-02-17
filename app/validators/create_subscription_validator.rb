@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# Signup validator
-module CreateSignupValidator
+# Subscription validator
+module CreateSubscriptionValidator
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
   def self.call(params)

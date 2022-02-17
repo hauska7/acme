@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V1::SignupsController, type: :controller do
+RSpec.describe Api::V1::SubscriptionsController, type: :controller do
   describe '#create' do
     let(:params) do
       { name: 'Johny Bravo',
@@ -43,19 +43,19 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
               token: '9674' }
           end
 
-          it 'creates a signup' do
+          it 'creates a subscription' do
             expect(fakepay_client).to receive(:first_charge).once
 
             expect do
               post :create, params:
-            end.to change { Signup.count }.by 1
+            end.to change { Subscription.count }.by 1
 
-            signup = Signup.last
-            expect(signup.name).to eq 'Johny Bravo'
-            expect(signup.plan).to eq 'bronze_box'
-            expect(signup.fakepay_token).to eq '9674'
-            expect(signup.next_charge_date).to be_present
-            address = signup.shipping_address
+            subscription = Subscription.last
+            expect(subscription.name).to eq 'Johny Bravo'
+            expect(subscription.plan).to eq 'bronze_box'
+            expect(subscription.fakepay_token).to eq '9674'
+            expect(subscription.next_charge_date).to be_present
+            address = subscription.shipping_address
             expect(address.street).to eq 'Sesame Street'
             expect(address.city).to eq 'New York'
             expect(address.zip_code).to eq '11111'
@@ -63,7 +63,7 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
 
             expect(response).to have_http_status(201)
             parsed_response = JSON.parse response.body
-            expect(parsed_response['signup_id']).to eq signup.id
+            expect(parsed_response['subscription_id']).to eq subscription.id
           end
         end
 
@@ -85,7 +85,7 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
             it 'returns error information' do
               expect do
                 post :create, params:
-              end.not_to(change { Signup.count })
+              end.not_to(change { Subscription.count })
 
               expect(response).to have_http_status(503)
               parsed_response = JSON.parse response.body
@@ -105,7 +105,7 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
             it 'returns error information' do
               expect do
                 post :create, params:
-              end.not_to(change { Signup.count })
+              end.not_to(change { Subscription.count })
 
               expect(response).to have_http_status(503)
               parsed_response = JSON.parse response.body
@@ -125,7 +125,7 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
             it 'returns error information' do
               expect do
                 post :create, params:
-              end.not_to(change { Signup.count })
+              end.not_to(change { Subscription.count })
 
               expect(response).to have_http_status(503)
               parsed_response = JSON.parse response.body
@@ -151,7 +151,7 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
             it 'returns error information' do
               expect do
                 post :create, params:
-              end.not_to(change { Signup.count })
+              end.not_to(change { Subscription.count })
 
               expect(response).to have_http_status(422)
               parsed_response = JSON.parse response.body
@@ -172,7 +172,7 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
 
               expect do
                 post :create, params:
-              end.not_to(change { Signup.count })
+              end.not_to(change { Subscription.count })
 
               expect(response).to have_http_status(422)
               parsed_response = JSON.parse response.body
@@ -191,7 +191,7 @@ RSpec.describe Api::V1::SignupsController, type: :controller do
       it 'returns error information' do
         expect do
           post :create, params:
-        end.not_to(change { Signup.count })
+        end.not_to(change { Subscription.count })
 
         expect(response).to have_http_status(422)
         parsed_response = JSON.parse response.body

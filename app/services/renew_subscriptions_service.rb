@@ -53,7 +53,7 @@ class RenewSubscriptionsService
   private
 
   def find_subscription
-    result = Signup
+    result = Subscription
              .where('next_charge_date < ?', @until_date)
              .where.not(fakepay_token: nil)
              .lock('FOR UPDATE SKIP LOCKED')
@@ -61,7 +61,7 @@ class RenewSubscriptionsService
 
     return result if result
 
-    Signup
+    Subscription
       .where('next_charge_date < ?', @until_date)
       .where.not(fakepay_token: nil)
       .lock('FOR UPDATE')

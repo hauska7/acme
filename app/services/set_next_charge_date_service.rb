@@ -4,28 +4,28 @@
 module SetNextChargeDateService
   # When date cant be set
   class CantError < StandardError
-    attr_reader :signup
+    attr_reader :subscription
 
-    def initialize(msg, signup)
-      @signup = signup
+    def initialize(msg, subscription)
+      @subscription = subscription
       super(msg)
     end
   end
 
-  def self.call!(signup)
-    result = call(signup)
-    raise CantError.new('Cant set next charge date', signup) unless result[:success]
+  def self.call!(subscription)
+    result = call(subscription)
+    raise CantError.new('Cant set next charge date', subscription) unless result[:success]
 
     result
   end
 
-  def self.call(signup)
-    if signup.next_charge_date.nil?
-      return { success: false } unless signup.created_at
+  def self.call(subscription)
+    if subscription.next_charge_date.nil?
+      return { success: false } unless subscription.created_at
 
-      signup.next_charge_date = 1.month.since signup.created_at.to_date
+      subscription.next_charge_date = 1.month.since subscription.created_at.to_date
     else
-      signup.next_charge_date = 1.month.since signup.next_charge_date
+      subscription.next_charge_date = 1.month.since subscription.next_charge_date
     end
 
     { success: true }

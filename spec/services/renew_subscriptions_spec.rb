@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe RenewSubscriptionsService do
-  let(:subscription) { create(:signup, fakepay_token: '7777', next_charge_date: Date.today - 1) }
-  let(:no_token_subscription) { create(:signup, fakepay_token: nil, next_charge_date: Date.today - 1) }
-  let(:not_scheduled_subscription) { create(:signup, fakepay_token: '6666', next_charge_date: Date.today + 1) }
+  let(:subscription) { create(:subscription, fakepay_token: '7777', next_charge_date: Date.today - 1) }
+  let(:no_token_subscription) { create(:subscription, fakepay_token: nil, next_charge_date: Date.today - 1) }
+  let(:not_scheduled_subscription) { create(:subscription, fakepay_token: '6666', next_charge_date: Date.today + 1) }
   let(:fakepay_client) { instance_double(FakepayClient) }
   let(:mock_fakepay_client) do
     allow(FakepayClient).to receive(:new).and_return(fakepay_client)

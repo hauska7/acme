@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-# Main service responsible for creating signups
-module CreateSignupService
+# Main service responsible for creating subscriptions
+module CreateSubscriptionService
   def self.call(params)
-    errors = CreateSignupValidator.call(params)
+    errors = CreateSubscriptionValidator.call(params)
     return { status: 'validation_failed', errors: } if errors.present?
 
     plan_price_cents = PlanPriceService.call(params['plan'])
@@ -19,7 +19,7 @@ module CreateSignupService
     fakepay_result = FakepayClient.build.first_charge(fakepay_data)
 
     if fakepay_result[:success]
-      signup = nil
+      subscription = nil
       ActiveRecord::Base.transaction do
         address = Address.new
         address.street = params['shipping_address']['street']
@@ -28,18 +28,18 @@ module CreateSignupService
         address.country = params['shipping_address']['country']
         address.save!
 
-        signup = Signup.new
-        signup.shipping_address = address
-        signup.name = params['name']
-        signup.plan = params['plan']
-        signup.fakepay_token = fakepay_result[:token]
-        signup.save!
+        subscription = Subscription.new
+        subscription.shipping_address = address
+        subscription.name = params['name']
+        subscription.plan = params['plan']
+        subscription.fakepay_token = fakepay_result[:token]
+        subscription.save!
 
-        SetNextChargeDateService.call signup
-        signup.save!
+        SetNextChargeDateService.call subscription
+        subscription.save!
       end
 
-      { status: 'success', signup: }
+      { status: 'success', subscription: }
     else
       case fakepay_result[:error_code]
       when 'validation_error'

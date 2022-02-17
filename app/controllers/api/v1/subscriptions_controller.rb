@@ -2,14 +2,14 @@
 
 module Api
   module V1
-    # Signups Controller
-    class SignupsController < ApplicationController
+    # Subscriptions Controller
+    class SubscriptionsController < ApplicationController
       def create
-        result = CreateSignupService.call(params)
+        result = CreateSubscriptionService.call(params)
 
         case result[:status]
         when 'success'
-          render status: 201, json: { signup_id: result[:signup].id }
+          render status: 201, json: { subscription_id: result[:subscription].id }
         when 'validation_failed'
           render status: 422, json: { error_code: 'validation_failed', errors: result[:errors] }
         when 'fakepay_failed'
