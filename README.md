@@ -15,9 +15,9 @@ add master key:
 
 docker-compose create
 
-use ruby-3.1.0
-
 docker-compose start
+
+use ruby-3.1.0
 
 bundle install
 
@@ -65,3 +65,9 @@ rake renew_subscriptions
 ## Thoughts on this project
 
 There is a vcr error when running rspec it is probably related to ruby/rails version. Please inspect the patch here: config/initializers/001_vcr_patch.rb
+
+What I really like is that api responds with errors containing invalid fields corresponding to fields that were sent. Which should make it really easy for frontend developers to match error messages to invalid fields.
+
+Best thing about renew subscription worker is that it can be run in parallel and there is no danger of charging twice for a subscription renewal.
+
+Some improvements on current solution would be to add a payment model that would store information about payments eg if succeeded or failed.
