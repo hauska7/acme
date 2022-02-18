@@ -74,3 +74,4 @@ Best thing about renew subscription worker is that it can be run in parallel and
 
 - add a payment model that would store information about payments eg if succeeded or failed.
 - add authorization
+- introduce asynchronus payments on signup
