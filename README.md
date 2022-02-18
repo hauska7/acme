@@ -39,17 +39,22 @@ curl -X POST \
 ```
 
 ### Failing Acme validation
+
+```
 curl -X POST \
   -H 'Content-Type: application/json' \
   -d '{}' \
   localhost:3000/api/v1/subscriptions
+```
 
 ### Failing Fakepay validation
 
+```
 curl -X POST \
   -H 'Content-Type: application/json' \
   -d '{"name":"Johny Bravo","plan":"bronze_box","shipping_address":{"street":"Sesame Street","city":"New York","zip_code":"11111","country":"USA"},"billing":{"card_number":"4242424242424241","cvv":"123","expiration_month":"02","expiration_year":2024,"zip_code":"22222"}}' \
   localhost:3000/api/v1/subscriptions
+```
 
 ## Run bonus renew subscriptions worker
 
