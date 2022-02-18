@@ -15,6 +15,8 @@ add master key:
 
 docker-compose create
 
+use ruby-3.1.0
+
 docker-compose start
 
 bundle install
