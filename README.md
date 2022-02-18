@@ -68,7 +68,7 @@ There is a vcr error when running rspec it is probably related to ruby/rails ver
 
 What I really like is that api responds with errors containing invalid fields corresponding to fields that were sent. Which should make it really easy for frontend developers to match error messages to invalid fields.
 
-Best thing about renew subscription worker is that it can be run in parallel and there is no danger of charging twice for a subscription renewal.
+Best thing about renew subscription worker is that it can be run in parallel and there is no danger of charging twice for a subscription renewal. Also in case it crashes it can be just restarted there is no locked subscription records.
 
 ### Some improvements on current solution would be to:
 
