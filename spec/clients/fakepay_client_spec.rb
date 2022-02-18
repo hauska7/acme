@@ -111,13 +111,12 @@ RSpec.describe FakepayClient do
     subject { described_class.new(api_key).subsequent_charge(payload) }
 
     let(:payload) do
-      { amount_cents: '1000',
-        token: }
+      { amount_cents:, token: }
     end
+    let(:token) { '141127d207221d5dcd3c9df5dea6d3' }
+    let(:amount_cents) { '1000' }
 
     context 'when request is correct' do
-      let(:token) { '141127d207221d5dcd3c9df5dea6d3' }
-
       context 'when response is valid' do
         it 'creates charge' do
           result = nil
@@ -169,17 +168,35 @@ RSpec.describe FakepayClient do
       end
     end
 
-    context 'when token is invalid' do
-      let(:token) { 'invalid' }
+    context 'when request is invalid' do
+      context 'when token is invalid' do
+        let(:token) { 'invalid' }
 
-      it 'returns invalid_token error' do
-        result = nil
-        VCR.use_cassette('fakepay_subsequent_invalid_token') do
-          result = subject
+        it 'returns invalid_token error' do
+          result = nil
+          VCR.use_cassette('fakepay_subsequent_invalid_token') do
+            result = subject
+          end
+
+          expect(result[:success]).to be false
+          expect(result[:error_code]).to eq 'invalid_token'
         end
+      end
 
-        expect(result[:success]).to be false
-        expect(result[:error_code]).to eq 'invalid_token'
+      context 'when there are insufficant funds' do
+        let(:amount_cents) { '1_000_000_000' }
+
+        it 'returns error' do
+          result = nil
+          VCR.use_cassette('fakepay_subsequent_insufficant_funds') do
+            result = subject
+          end
+
+          pending 'I have troubles with triggering this error in fakepay api'
+
+          expect(result[:success]).to be false
+          expect(result[:error_code]).to eq 'insufficent_funds'
+        end
       end
     end
   end

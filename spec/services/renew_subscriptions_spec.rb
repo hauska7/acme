@@ -3,7 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe RenewSubscriptionsService do
-  let(:subscription) { create(:subscription, fakepay_token: '7777', next_charge_date: Date.today - 1) }
+  let(:subscription) { create(:subscription, fakepay_token: '7777', next_charge_date: old_next_charge_date) }
+  let(:old_next_charge_date) { Date.today - 1 }
   let(:no_token_subscription) { create(:subscription, fakepay_token: nil, next_charge_date: Date.today - 1) }
   let(:not_scheduled_subscription) { create(:subscription, fakepay_token: '6666', next_charge_date: Date.today + 1) }
   let(:fakepay_client) { instance_double(FakepayClient) }
@@ -51,7 +52,6 @@ RSpec.describe RenewSubscriptionsService do
 
             described_class.call
 
-            old_next_charge_date = subscription.next_charge_date
             subscription.reload
 
             expect(subscription.next_charge_date > old_next_charge_date)
@@ -70,7 +70,6 @@ RSpec.describe RenewSubscriptionsService do
 
             described_class.call
 
-            old_next_charge_date = subscription.next_charge_date
             subscription.reload
 
             expect(subscription.next_charge_date).to eq old_next_charge_date
@@ -83,7 +82,6 @@ RSpec.describe RenewSubscriptionsService do
           it 'raises repeat error' do
             expect { described_class.call }.to raise_error(RenewSubscriptionsService::RepeatError)
 
-            old_next_charge_date = subscription.next_charge_date
             subscription.reload
 
             expect(subscription.next_charge_date).to eq old_next_charge_date
@@ -96,7 +94,6 @@ RSpec.describe RenewSubscriptionsService do
           it 'raises repeat error' do
             expect { described_class.call }.to raise_error(RenewSubscriptionsService::RepeatError)
 
-            old_next_charge_date = subscription.next_charge_date
             subscription.reload
 
             expect(subscription.next_charge_date).to eq old_next_charge_date
@@ -114,11 +111,23 @@ RSpec.describe RenewSubscriptionsService do
 
             described_class.call
 
-            old_next_charge_date = subscription.next_charge_date
             subscription.reload
 
             expect(subscription.next_charge_date).to eq old_next_charge_date
           end
+        end
+      end
+
+      context 'when fakepay client returns invalid_token error' do
+        let(:fakepay_result) { { success: false, error_code: 'invalid_token' } }
+
+        it 'delete subscription token' do
+          described_class.call
+
+          subscription.reload
+
+          expect(subscription.next_charge_date).to eq old_next_charge_date
+          expect(subscription.fakepay_token).to be_nil
         end
       end
     end

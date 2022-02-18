@@ -34,6 +34,9 @@ class RenewSubscriptionsService
           @subscription.save!
         else
           case fakepay_result[:error_code]
+          when 'invalid_token'
+            @subscription.fakepay_token = nil
+            @subscription.save!
           when 'invalid_credentials'
             NotifyDevelopersService.notify(issue: 'fakepay_invalid_credentials', fakepay_result:)
             return
