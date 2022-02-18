@@ -70,4 +70,7 @@ What I really like is that api responds with errors containing invalid fields co
 
 Best thing about renew subscription worker is that it can be run in parallel and there is no danger of charging twice for a subscription renewal.
 
-Some improvements on current solution would be to add a payment model that would store information about payments eg if succeeded or failed.
+### Some improvements on current solution would be to:
+
+- add a payment model that would store information about payments eg if succeeded or failed.
+- add authorization
