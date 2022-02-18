@@ -19,7 +19,7 @@ module EndUserMessagesHelper
   end
 
   def self.fakepay_error(error_code, notify_missing_codes: false)
-    result = FAKEPAY_ERROR_MESSAGES[error_code.to_sym]
+    result = FAKEPAY_ERROR_MESSAGES[error_code.to_s.to_sym]
     if result.nil?
       if notify_missing_codes
         NotifyDevelopersService.notify(issue: 'unknown_fakepay_error_code', fakepay_error_code: error_code)

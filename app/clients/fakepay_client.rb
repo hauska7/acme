@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'net/http'
+
 # Api client for Fakepay
 class FakepayClient
   def self.build
